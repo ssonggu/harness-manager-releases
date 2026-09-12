@@ -36,10 +36,23 @@ open "$harness_download_dir"
 
 - 공통 작업 지침과 Claude 전용 규칙·프로젝트 템플릿
 - Claude 하단 모델·추론·컨텍스트 표시, 공통 모델·환경 설정
-- Codex 기본 Astra/high 설정, 기존 계정을 유지하는 실행 함수, OpenAI Docs MCP 설정
+- Codex 기본 Astra/high 설정, 하단 모델·추론·5시간/주간 한도 표시, 기존 계정을 유지하는 실행 함수, OpenAI Docs MCP 설정
 - Orca·브라우저·컴퓨터 사용 공용 스킬. 기존 호스트 파일과 Orca/Herdr 연결은 보존
 
 이 배포의 Codex 실행 함수에는 승인된 개인 운영 방식에 따라 승인·샌드박스 우회 옵션이 포함되어 있습니다. 공용 배포의 설정을 적용하기 전에 미리보기를 확인하세요.
+
+계정 명령은 `codex`, `codex-c`, `codex-bs`, `codex-bc` 네 개입니다. 기존 Mac의 계정 함수가 있으면 그 연결을 유지합니다. 새 Mac의 추가 계정은 `HARNESS_CODEX_C_HOME`, `HARNESS_CODEX_BS_HOME`, `HARNESS_CODEX_BC_HOME`에 각각의 로그인 폴더를 지정합니다. 새 추가 계정은 `~/.codex-<이름>` 형식을 권장하며, 계정을 나중에 추가하면 앱에서 다시 적용합니다.
+
+앱의 자동 탐색 대상은 `~/.codex`, `config.toml` 또는 `auth.json`이 존재하는 `~/.codex-*`, Orca의 `~/Library/Application Support/orca/codex-accounts/*/home`, 앱 실행 환경의 `CODEX_HOME`뿐입니다. `HARNESS_CODEX_*_HOME`에 임의 경로를 넣는 것만으로는 앱이 그 계정을 발견하지 않습니다. 그 밖의 경로는 CLI 배포본에서 `python3 install.py --codex-home "$HOME/my-codex-home"`으로 미리본 뒤 같은 명령에 `--apply`를 붙여 적용합니다. 계정 홈은 대상 사용자 홈 안에 있어야 합니다.
+
+1.1.1의 `codex-b`/`codex-s` 대신 `codex`, `codex-c`, `codex-bs`, `codex-bc` 중 해당 계정의 명령을 사용합니다. 이전 `HARNESS_CODEX_B_HOME`/`HARNESS_CODEX_S_HOME`은 자동 이관되지 않으므로 기존 인증 경로를 해당 계정의 새 변수 `HARNESS_CODEX_C_HOME`/`HARNESS_CODEX_BS_HOME`/`HARNESS_CODEX_BC_HOME`에 명시적으로 설정하세요. 기존 호스트 함수와 인증 경로는 보존하며 인증 파일은 옮기지 않습니다.
+
+Codex 하단 표시의 최초 관리 등록은 기존 하단 배열을 공통 3항목으로 교체합니다. 이전 `status_line` 영수증이 없는 1.1.1 → 1.1.2 업데이트도 여기에 해당합니다. 등록 이후 직접 수정하거나 삭제하면 충돌로 전체 적용을 쓰기 전에 중단합니다. 삭제 후 다시 적용하려면 오류에 표시된 `config.toml`의 `[tui]` 안에 아래 배열을 돌려넣고 재시도하세요. 기존 `[tui]`가 있으면 그 안에 추가하고 중복 테이블이나 키를 만들지 마세요. 다른 설정과 영수증은 삭제하지 않습니다.
+
+```toml
+[tui]
+status_line = ["model-with-reasoning", "five-hour-limit", "weekly-limit"]
+```
 
 Claude·Codex와 호스트 앱 설치, 계정 로그인, 추가 계정 경로 설정, Chrome/Sites 등 별도 플러그인의 설치·인증은 각 Mac에서 확인합니다. 계정 인증·토큰·세션·캐시·개인 업무 스킬은 이 공개 저장소에 포함하지 않습니다. 설정 파일 검증만으로 모든 외부 도구의 연결 성공을 의미하지는 않습니다.
 
