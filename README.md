@@ -43,7 +43,7 @@ open "$harness_download_dir"
 
 계정 명령은 `codex`, `codex-c`, `codex-bs`, `codex-bc` 네 개입니다. 기존 Mac의 계정 함수가 있으면 그 연결을 유지합니다. 새 Mac의 추가 계정은 `HARNESS_CODEX_C_HOME`, `HARNESS_CODEX_BS_HOME`, `HARNESS_CODEX_BC_HOME`에 각각의 로그인 폴더를 지정합니다. 새 추가 계정은 `~/.codex-<이름>` 형식을 권장하며, 계정을 나중에 추가하면 앱에서 다시 적용합니다.
 
-앱의 자동 탐색 대상은 `~/.codex`, `config.toml` 또는 `auth.json`이 존재하는 `~/.codex-*`, Orca의 `~/Library/Application Support/orca/codex-accounts/*/home`, 앱 실행 환경의 `CODEX_HOME`뿐입니다. `HARNESS_CODEX_*_HOME`에 임의 경로를 넣는 것만으로는 앱이 그 계정을 발견하지 않습니다. 그 밖의 경로는 CLI 배포본에서 `python3 install.py --codex-home "$HOME/my-codex-home"`으로 미리본 뒤 같은 명령에 `--apply`를 붙여 적용합니다. 계정 홈은 대상 사용자 홈 안에 있어야 합니다.
+앱의 자동 탐색 대상은 `~/.codex`, `config.toml` 또는 `auth.json`이 존재하는 `~/.codex-*`, Orca의 `~/Library/Application Support/orca/codex-accounts/*/home`, 앱 실행 환경의 `CODEX_HOME`입니다. 아래 계정별 선택 파일에 명시한 홈과 이전에 관리한 기존 계정 홈도 포함합니다. `HARNESS_CODEX_*_HOME`에 임의 경로를 넣는 것만으로는 앱이 그 계정을 발견하지 않습니다. 그 밖의 경로는 CLI 배포본에서 `python3 install.py --codex-home "$HOME/my-codex-home"`으로 미리본 뒤 같은 명령에 `--apply`를 붙여 적용합니다. 계정 홈은 대상 사용자 홈 안에 있어야 합니다.
 
 1.1.1의 `codex-b`/`codex-s` 대신 `codex`, `codex-c`, `codex-bs`, `codex-bc` 중 해당 계정의 명령을 사용합니다. 이전 `HARNESS_CODEX_B_HOME`/`HARNESS_CODEX_S_HOME`은 자동 이관되지 않으므로 기존 인증 경로를 해당 계정의 새 변수 `HARNESS_CODEX_C_HOME`/`HARNESS_CODEX_BS_HOME`/`HARNESS_CODEX_BC_HOME`에 명시적으로 설정하세요. 기존 호스트 함수와 인증 경로는 보존하며 인증 파일은 옮기지 않습니다.
 
@@ -59,3 +59,28 @@ Claude·Codex와 호스트 앱 설치, 계정 로그인, 추가 계정 경로 �
 기존 사용자 설정을 안전하게 병합할 수 없으면 적용을 중단합니다. 설정 복구는 앱의 백업 선택과 **복구…**를 사용합니다. 설치 이후 별도로 수정한 내용은 덮어쓰지 않고 충돌을 알립니다.
 
 이 저장소는 공개 배포 전용입니다. 릴리스에는 앱 ZIP, 지침 ZIP, 각각의 서명된 승인 문서와 SHA-256 목록이 있습니다.
+
+
+## 이 Mac의 계정별 Codex 모델 선택
+
+공통 기본값은 Astra/high다. 이 Mac에서만 다른 값을 쓰려면 사용자가 `~/.config/portable-harness/codex-overrides.json`을 만들거나 편집한 뒤 미리보기·적용을 다시 실행한다. 예를 들어 두 비즈니스 계정이 아래 계정 홈을 사용한다면 두 비즈니스 계정만 Sol/medium이 되고, 지정하지 않은 개인 두 계정은 Astra/high를 유지한다.
+
+```json
+{
+  "schema": 1,
+  "accounts": {
+    ".codex-business-one": {
+      "model": "gpt-5.6-sol",
+      "model_reasoning_effort": "medium"
+    },
+    ".codex-business-two": {
+      "model": "gpt-5.6-sol",
+      "model_reasoning_effort": "medium"
+    }
+  }
+}
+```
+
+키는 실제 계정 홈의 HOME 기준 상대경로다. 해당 디렉터리는 먼저 존재해야 하며 절대경로, `..`, HOME 밖 링크, 같은 계정의 중복 경로는 거부한다. 값은 `model`과 `model_reasoning_effort`만 허용하며 생략한 값에는 공통 기본값을 사용한다. 지정한 계정은 기본 탐색 경로 밖에 있어도 공통 AGENTS와 하단 표시 적용에 포함된다.
+
+이 JSON은 사용자 소유로 설치·업데이트가 배포하거나 덮어쓰지 않는다. 같은 선택을 다른 Mac에도 쓰려면 **이 파일만** 대상 Mac의 같은 상대 위치로 수동 복사하고, 계정 홈 경로를 그 Mac에 맞춘 뒤 미리보기·적용한다. 인증 파일은 복사하지 않는다. 항목이나 파일을 삭제하고 다시 적용하면 해당 계정이 공통 기본값으로 돌아간다. `config.toml`의 관리 모델 값을 별도로 바꾸면 충돌로 전체 적용이 중단되므로 모델 변경은 이 JSON에서 한다.
