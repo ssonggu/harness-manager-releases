@@ -42,7 +42,7 @@ open "$harness_download_dir"
 
 실제 분담 스킬은 `$bundam`, `/bundam`, “분담 스킬로 나눠서 처리해”처럼 사용을 명시 요청할 때 적용합니다. 단순 언급이나 설명 질문에는 활성화하지 않으며, 스킬 호출 자체가 파일 변경 승인을 뜻하지 않습니다. 상태는 기존 작업 기록 한 곳에서 관리하며 의미 있는 변화와 막힘만 짧게 알립니다.
 
-지금 실행 중인 프로그램이 지원하는 기능을 먼저 씁니다. `computer-use`, `orca-cli`, `orchestration`은 Orca 소유라 파일은 그대로 두지만, Orca 밖(herdr·일반 터미널)에서는 Claude 훅이 자동 호출을 막고 Codex 실행 명령이 목록에서 뺍니다. 필요하면 `/computer-use`처럼 직접 부를 수 있습니다. `ego-browser`는 직접 부를 때만 씁니다(Claude `/ego-browser`, Codex `$ego`). ego 앱이 업데이트하면서 Codex 쪽 스킬 연결을 다시 만들어도 Codex 실행 명령이 자동 사용 목록에서 뺍니다. herdr 연동은 herdr가 관리합니다(`herdr integration install claude`). 보존된 Orca 정책 파일도 공통 지침에서 자동으로 읽도록 연결하지 않습니다.
+지금 실행 중인 프로그램의 스킬만 자동으로 씁니다. Orca(`computer-use`, `orca-cli`, `orchestration`)·Paseo(`paseo`, `paseo-*`)·herdr(`herdr`) 스킬은 각 프로그램 소유라 파일은 그대로 두지만, 그 프로그램이 띄운 세션이 아니면 Claude 훅이 자동 호출을 막고 Codex 실행 명령이 목록에서 뺍니다. 다른 프로그램의 CLI(`orca`, `paseo`, `herdr`)를 실행하려 하면 Claude가 먼저 확인을 묻습니다. 필요하면 `/paseo`처럼 직접 부를 수 있습니다. 브라우저 작업은 `ego-browser`(ego lite)를 기본으로 씁니다. ego lite는 첫 실행 설정을 마쳐야 `ego-browser` 명령이 생깁니다. herdr 연동은 herdr가 관리합니다(`herdr integration install claude`). 보존된 Orca 정책 파일도 공통 지침에서 자동으로 읽도록 연결하지 않습니다.
 
 ### 작업 구성 선택·저장
 
